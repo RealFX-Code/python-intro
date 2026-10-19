@@ -9,7 +9,20 @@ import random
 import country_converter as coco
 import copy
 
-# Init so python knows this should be global
+#
+# This is where we store our data... duh!
+#
+
+#
+#   data = {
+#       "Country": [
+#           { "year": "1940", "temp": "10.09489"}
+#           { "year": "1941", "temp": "11.48989"},
+#           { "year": "1942", "temp": "10.22229"},
+#           ...
+#       ]
+#   }
+#
 data = {}
 
 def parse_csv():
@@ -80,7 +93,11 @@ def plot_continents():
     temps = {}
     avgtemps = {}
     years = []
-    # For each country we have data from
+
+    #
+    # Store all out data in temps, and add the years we have data of into years.
+    # See above for an example of temps and avgtemps and how they are laid out
+    #
     for datacountry in data:
         cc = coco.CountryConverter()
         continent = cc.convert(datacountry, to="Continent")
@@ -102,6 +119,10 @@ def plot_continents():
             # Should only be to add the years on the first loop
             if int(row["year"]) not in years:
                 years.append(int(row["year"]))
+
+    #
+    #   Get the temperatures in temps, and store their average per year in avgtemps
+    #
     for continent in temps:
         avg = float(0)
         amt = float(0)
@@ -110,6 +131,9 @@ def plot_continents():
                 avg += temp
                 amt += 1
             avgtemps[continent].append(avg / amt)
+    #
+    #   Plot each continent as well as a unique color.
+    #
     colors = plt.cm.tab10(np.linspace(0, 1, len(temps)))
     for continent, color in zip(temps, colors):
         # We should always have one data point for each year.
@@ -128,6 +152,9 @@ def main():
     plot_continents()
 
 if __name__ == "__main__":
+    #
+    #   This is to silence an ugly stacktrace if we ctrl+c
+    #
     try:
         main()
     except KeyboardInterrupt:
